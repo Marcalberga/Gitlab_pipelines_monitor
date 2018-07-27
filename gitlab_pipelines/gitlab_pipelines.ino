@@ -16,6 +16,10 @@ void setup() {
   pinMode(buzzer, OUTPUT);
 
   Serial.begin(9600);
+
+  digitalWrite(successPin, HIGH);
+  digitalWrite(runningPin, HIGH);
+  digitalWrite(redPin, HIGH);
 }
 
 void loop() {
@@ -56,7 +60,6 @@ void loop() {
         }
       }
   }
-
-  delay(100);
+  delay(1000);
 
 }
