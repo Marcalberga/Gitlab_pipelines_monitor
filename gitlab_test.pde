@@ -15,9 +15,9 @@ Serial myPort;
 // CUSTOM VALUES
 
 // add your user private token from gitlab
-String privateToken = "Le6yebNcdbnLgodoRQ3x";
+String privateToken = "youPrivateToken";
 // add the url for your gitlab instance, ie: http://gitlab.example.com
-String gitlabUrl = "https://gitlab.delcamp.cat";
+String gitlabUrl = "https://gitlab.example.com";
 // add the refresh rate in seconds, how often will this sketch check for status
 int refreshRate = 15;
 // Sets need to verify certificate on https connections
