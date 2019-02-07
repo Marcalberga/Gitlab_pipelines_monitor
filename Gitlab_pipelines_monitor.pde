@@ -15,15 +15,17 @@ Serial myPort;
 // CUSTOM VALUES
 
 // add your user private token from gitlab
-String privateToken = "youPrivateToken";
+String privateToken = "YourUserAccessToken";
 // add the url for your gitlab instance, ie: http://gitlab.example.com
-String gitlabUrl = "https://gitlab.example.com";
+String gitlabUrl = "https://gitlab.example.net";
 // add the refresh rate in seconds, how often will this sketch check for status
-int refreshRate = 15;
+int refreshRate = 30;
+// The group to search for pipelines
+String groupName = "YOURGROUPNAME";
 // Sets need to verify certificate on https connections
 boolean sslVerify = false;
 // Sets connection to arduino
-boolean arduino = true;
+boolean arduino = false;
 // Sets the COMM port to use when communication to arduino
 int commElement = 2; // 2 on mac
 
@@ -32,11 +34,13 @@ int commElement = 2; // 2 on mac
 public void setup()
 {
     trustAllHosts();
-    String portName = Serial.list()[commElement];
-    myPort = new Serial(this, portName, 9600);
-    projectsDataArray = getProjectsData();
+    if (arduino) {
+      String portName = Serial.list()[commElement];
+      myPort = new Serial(this, portName, 9600);
+    }
+    projectsDataArray = getProjectsData(groupName);
     int appHeight = getNumOfProjects(projectsDataArray) / 4;
-    size(1000, 300);
+    size(1920, 300);
     background(255);
     stroke(0); 
     fill(0);
@@ -45,7 +49,7 @@ public void setup()
 public void draw()
 {
     background(255);
-    int x = 1000/8;
+    int x = 1920/8;
     int y = 150;
     int numOfPipelines = 0;
     int globalStatus = 0;
@@ -68,15 +72,14 @@ public void draw()
         fill(0);
         textAlign(CENTER);
         textSize(25);
-        text(status, x, y + 50);
-        textSize(35);
+        text(status, x, y + 80);
+        textSize(35);        
         text(projectsDataArray.getJSONObject(i).getString("name"), x, y - 50);
-        x = x + (1000/4);
-        if (numOfPipelines > 4 && numOfPipelines % 4 == 0) {
-          println(i);
-           x = 1000/8;
+        x = x + (1920/4);
+        if (numOfPipelines > 4 && numOfPipelines % 4 == 0) {          
+           x = 1920/8;
            y = y + 300;
-           surface.setSize(1000, height + 300);
+           surface.setSize(1920, height + 300);
         }
         numOfPipelines++;
       }
@@ -99,9 +102,9 @@ private String getPipelineData(int projectId)
   return datatemp;
 }
 
-private JSONArray getProjectsData()
+private JSONArray getProjectsData(String groupName)
 {
-     projectsData = getGitlabGetData("/api/v4/projects?simple=true");
+     projectsData = getGitlabGetData("/api/v4/groups/"+groupName+"/projects");
      return parseJSONArray(projectsData);
 }
 
